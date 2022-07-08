@@ -17,6 +17,7 @@ parser.add_argument('--queue', type=str, default='tomorrow')
 parser.add_argument('--ncpus', type=str, default='1')
 parser.add_argument('--ngpus', type=str, default='1')
 parser.add_argument('--jobname', type=str, default='0')
+parser.add_argument('--gitbranch', tpye=str, default='master')
 argsKnown, myCommand = parser.parse_known_args()
 
 myArguments = vars(argsKnown)
@@ -75,7 +76,9 @@ jobPath = os.path.join(condorPath, jobName)
 if not os.path.isdir(jobPath):
     os.mkdir(jobPath)
 
-    
+# git branch
+gitbranch = myArguments['gitbranch']
+
 # Basic set-up into local taunet area
 jobScript = []
 jobScript += ['#!/usr/bin/bash']
@@ -90,6 +93,7 @@ jobScript += ['mkdir -p /tmp/'+username+'/'+jobName+'/taunet']
 # Disgusting bash statement: only copy files under version control
 # This is to prevent unnecessary copying of files
 # If file is under a given folder, a new folder needs to be generated
+jobScript += ['git checkout '+gitbranch] # select correct branch from git
 jobScript += ['for GITFILE in $(git ls-files); do if [[ $GITFILE == *"/"* ]]; then mkdir -p /tmp/'+username+'/'+jobName+'/taunet/${GITFILE%/*}; fi; cp $GITFILE /tmp/'+username+'/'+jobName+'/taunet/$GITFILE; done']
 jobScript += ['cd ..']
 jobScript += ['cp -r tesenv /tmp/'+username+'/'+jobName+'/']

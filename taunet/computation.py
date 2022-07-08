@@ -80,15 +80,22 @@ def getVarIndices(features, vars=FEATURES):
         i = i + 1
     return indices
 
+# sketch function for condor things 
+def select_norms(norms, vec):
+    tempNorms = []
+    for i in vec:
+        tempNorm += [norms[i]]
+    return tempNorms
+
 # variables to normalize
 VARNORM = [
-    # 'TauJetsAuxDyn.mu', 
-    # 'TauJetsAuxDyn.nVtxPU',
-    # 'TauJetsAuxDyn.rho',
-    # 'TauJetsAuxDyn.ClustersMeanCenterLambda',
+    'TauJetsAuxDyn.mu', 
+    'TauJetsAuxDyn.nVtxPU',
+    'TauJetsAuxDyn.rho',
+    'TauJetsAuxDyn.ClustersMeanCenterLambda',
     'TauJetsAuxDyn.ClustersMeanFirstEngDens',
-    # 'TauJetsAuxDyn.ClustersMeanSecondLambda',
-    # 'TauJetsAuxDyn.ptCombined',
-    # 'TauJetsAuxDyn.etaPanTauCellBased',
-    # 'TauJetsAuxDyn.ptTauEnergyScale'
+    'TauJetsAuxDyn.ClustersMeanSecondLambda',
+    'TauJetsAuxDyn.ptCombined',
+    'TauJetsAuxDyn.etaPanTauCellBased',
+    'TauJetsAuxDyn.ptTauEnergyScale'
 ]

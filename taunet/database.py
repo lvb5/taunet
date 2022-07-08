@@ -5,7 +5,7 @@ Database changes:
 """
 import os
 
-from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalize, applySSNormalizeTest, getVarIndices, VARNORM
+from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalize, applySSNormalizeTest, getVarIndices, select_norms, VARNORM
 from . import log; log = log.getChild(__name__)
 
 DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Round3/TES/'
@@ -51,7 +51,7 @@ def retrieve_arrays(tree, fields, cut=None, select_1p=False, select_3p=False):
         arrays = arrays[ arrays['TauJetsAuxDyn.nTracks'] == 3 ]
     return arrays
         
-def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, select_3p=False, use_cache=False, tree_name='CollectionTree', no_normalize=False, no_norm_target=False, normSavePath='data/normFactors'):
+def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, select_3p=False, use_cache=False, tree_name='CollectionTree', no_normalize=False, no_norm_target=False, normSavePath='data/normFactors', normIndices=range(8)):
     """
     """
     if use_cache:
@@ -98,16 +98,13 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
         _target = _target.reshape(_target.shape[0], 1)
         log.info('Total training input = {}'.format(_train.shape))
 
-        #! added for testing
-        og_train = np.array(_train)
-        old_target = np.array(_target)
-
         #normalize here!
+        varnom = select_norms(VARNORM, normIndices)
         if not no_normalize:
             log.info('Normalizing training data')
             norms = getSSNormalize(_train, _target, savepath=normSavePath)
             _train = applySSNormalize(_train, norms, 
-                        vars=getVarIndices(features, VARNORM))
+                        vars=getVarIndices(features, varnom))
             if not no_norm_target:
                 log.info('Normalizing validation data')
                 _target = StandardScalar(_target, norms[len(norms) - 1][0], norms[len(norms) - 1][1])

@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # get training data
     X_train, X_val, y_train, y_val = training_data(
         PATH, DATASET, FEATURES, TARGET_FIELD, nfiles=n_files, 
-        select_1p=args.oneProng, select_3p=args.threeProngs,
+        select_1p=args.oneProng, select_3p=args.threeProngs, normIndices=list(map(int, args.normIDs)), 
         no_normalize=args.no_normalize, no_norm_target=args.no_norm_target)
 
     # import model
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         print (adam.learning_rate)
         adam.learning_rate = rate
         print (adam.learning_rate)
-        _epochs = 100
+        _epochs = 200
         regressor.compile(
             loss='mean_squared_error', 
             optimizer=adam, 

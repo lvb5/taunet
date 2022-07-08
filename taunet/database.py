@@ -164,7 +164,7 @@ def testing_data(
                 select_3p=select_3p)
             f = np.stack(
                 [ak.flatten(a[__feat]).to_numpy() for __feat in features])
-            print('Shape of f is {}'.format(np.shape(f)))
+            # print('Shape of f is {}'.format(np.shape(f)))
             # Optionally normalize data if done in the training
             if not no_normalize:
                 f = applySSNormalizeTest(f, norms, vars=getVarIndices(features, VARNORM))

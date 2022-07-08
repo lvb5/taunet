@@ -12,7 +12,6 @@ Command-line options:
 """
 import os
 import pickle
-from taunet.models import keras_model_terry_regular
 import tensorflow as tf
 
 from taunet.database import PATH, DATASET, training_data

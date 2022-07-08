@@ -84,7 +84,7 @@ def getVarIndices(features, vars=FEATURES):
 def select_norms(norms, vec):
     tempNorms = []
     for i in vec:
-        tempNorm += [norms[i]]
+        tempNorms += [norms[i]]
     return tempNorms
 
 # variables to normalize

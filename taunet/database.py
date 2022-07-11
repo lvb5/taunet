@@ -106,7 +106,7 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
             norms = getSSNormalize(_train, _target, savepath=normSavePath)
             _train = applySSNormalize(_train, norms, 
                         vars=getVarIndices(features, varnom))
-            print(getVarIndices(features, varnom))
+            log.info("Indices of variables to be normalized: {}".format(getVarIndices(features, varnom)))
             if not no_norm_target:
                 log.info('Normalizing validation data')
                 _target = StandardScalar(_target, norms[len(norms) - 1][0], norms[len(norms) - 1][1])
@@ -121,7 +121,7 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
 
 def testing_data(
         path, dataset, features, plotting_fields, regressor, 
-        nfiles=-1, select_1p=False, select_3p=False, tree_name='CollectionTree',saveToCache=False, useCache=False, optional_path='', no_normalize=False, no_norm_target=False):
+        nfiles=-1, select_1p=False, select_3p=False, tree_name='CollectionTree',saveToCache=False, useCache=False, optional_path='', no_normalize=False, no_norm_target=False, normIndices=range(8)):
     """
     """
     import numpy as np
@@ -147,6 +147,7 @@ def testing_data(
             norms = np.load(os.path.join(optional_path, 'normFactors.npy'))
     
     _arrs = []
+    varnom = select_norms(VARNORM, normIndices) # variables to normalize
     for i_f, _file in enumerate(_files):
         if nfiles > 0 and i_f > nfiles:
             break
@@ -164,7 +165,7 @@ def testing_data(
             # print('Shape of f is {}'.format(np.shape(f)))
             # Optionally normalize data if done in the training
             if not no_normalize:
-                f = applySSNormalizeTest(f, norms, vars=getVarIndices(features, VARNORM))
+                f = applySSNormalizeTest(f, norms, vars=getVarIndices(features, varnom))
                 log.info('Normalizing input data to regressor')
             regressed_target = regressor.predict(f.T)
             if not no_norm_target:
@@ -182,6 +183,7 @@ def testing_data(
             # append_fields(_arr, 'regressed_target', regressed_target, usemask=False)
             _arrs += [_arr]
 
+    log.info("Indices of variables normalized: {}".format(getVarIndices(features, varnom)))
     _arrs = np.concatenate(_arrs)
     log.info('Total testing input = {}'.format(_arrs.shape))
     if saveToCache:

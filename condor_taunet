@@ -17,7 +17,7 @@ parser.add_argument('--queue', type=str, default='tomorrow')
 parser.add_argument('--ncpus', type=str, default='1')
 parser.add_argument('--ngpus', type=str, default='1')
 parser.add_argument('--jobname', type=str, default='0')
-parser.add_argument('--gitbranch', tpye=str, default='master')
+parser.add_argument('--gitbranch', type=str, default='master')
 argsKnown, myCommand = parser.parse_known_args()
 
 myArguments = vars(argsKnown)

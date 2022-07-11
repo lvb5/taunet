@@ -49,7 +49,7 @@ def getSSNormalize(data, target, savepath='data/normFactors'):
 
 def applySSNormalize(data, norms, vars=[]):
     """
-    Use already find means and std to re-shape data
+    Use alread found means and stds to re-shape data
     Optionally choose which variables to normalize
     """
     if vars == []:

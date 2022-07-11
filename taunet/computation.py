@@ -56,11 +56,11 @@ def applySSNormalize(data, norms, vars=[]):
         vars = range(len(data[0,:]))
     for i in vars:
         data[:,i] = StandardScalar(data[:,i], norms[i][0], norms[i][1])
-    return data; 
+    return data
 
 def applySSNormalizeTest(data, norms, vars=[]):
     """
-    Apply norms to testing data. 
+    Apply norms to testing data
     """
     if vars == []:
         vars = range(len(data[:,0]))

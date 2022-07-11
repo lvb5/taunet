@@ -5,7 +5,7 @@ Database changes:
 """
 import os
 
-from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalize, applySSNormalizeTest, getVarIndices, select_norms, VARNORM
+from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalizeTest, getVarIndices, select_norms, VARNORM, applySSNormalize
 from . import log; log = log.getChild(__name__)
 
 DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Round3/TES/'

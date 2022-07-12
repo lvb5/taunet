@@ -64,7 +64,7 @@ if __name__ == '__main__':
             ## validation_split=0.1,
             validation_data=(X_val, y_val),
             callbacks=[
-                # tf.keras.callbacks.EarlyStopping(verbose=True, patience=20, monitor='val_loss'),
+                tf.keras.callbacks.EarlyStopping(verbose=True, patience=20, monitor='val_loss'),
                 tf.keras.callbacks.ModelCheckpoint(
                     _model_file, 
                     monitor='val_loss',

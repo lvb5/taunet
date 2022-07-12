@@ -51,7 +51,8 @@ if __name__ == '__main__':
     d = testing_data(
         PATH, DATASET, FEATURES, TRUTH_FIELDS + OTHER_TES, regressor, nfiles=n_files, 
         optional_path=path, select_1p=args.oneProng, select_3p=args.threeProngs, 
-        no_normalize=args.no_normalize, no_norm_target=args.no_norm_target)
+        no_normalize=args.no_normalize, no_norm_target=args.no_norm_target, normIndices=list(map(int, args.normIDs)), 
+        saveToCache=args.add_to_cache, useCache=args.use_cache)
 
     from taunet.plotting import nn_history
     nn_history(os.path.join(path, 'history.p'), path)
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 
     from taunet.plotting import target_lineshape
     target_lineshape(d, plotSaveLoc=path)
-    target_lineshape(d, bins=100, range=(0.5, 1.5), basename='tes_target_lineshape_zoomedin', logy=False)
+    target_lineshape(d, bins=100, range=(0.5, 1.5), basename='tes_target_lineshape_zoomedin', logy=False, plotSaveLoc=path)
 
     from taunet.plotting import response_and_resol_vs_pt
     response_and_resol_vs_pt(d, path)

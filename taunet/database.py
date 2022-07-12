@@ -44,11 +44,11 @@ def retrieve_arrays(tree, fields, cut=None, select_1p=False, select_3p=False):
     arrays = tree.arrays(fields, cut=cut)
     arrays = arrays[ arrays['TauJetsAuxDyn.nTracks'] > 0 ]
     arrays = arrays[ arrays['TauJetsAuxDyn.nTracks'] < 6 ]
-    #arrays = arrays[ arrays['']]
     if select_1p:
         arrays = arrays[ arrays['TauJetsAuxDyn.nTracks'] == 1 ]
     if select_3p: 
         arrays = arrays[ arrays['TauJetsAuxDyn.nTracks'] == 3 ]
+
     return arrays
         
 def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, select_3p=False, use_cache=False, tree_name='CollectionTree', no_normalize=False, no_norm_target=False, normSavePath='data/normFactors', normIndices=range(8)):
@@ -80,16 +80,14 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
                     cut = 'EventInfoAux.eventNumber%3 != 0',
                     select_1p=select_1p,
                     select_3p=select_3p)
-                # a = a[ a['TauJetsAuxDyn.ptIntermediateAxisEM/TauJetsAuxDyn.ptIntermediateAxis'] < 1.25]
-                a = a[ a['TauJetsAuxDyn.ptPanTauCellBased/TauJetsAuxDyn.ptCombined'] < 25. ] # previosly 25
-                a = a[ a['TauJetsAuxDyn.ptIntermediateAxis/TauJetsAuxDyn.ptCombined'] < 25. ] # previously 25
-                # a = a[ a['TauJetsAuxDyn.ptTauEnergyScale'] < 0.5e6 ]
-                # a = a[ a['TauJetsAuxDyn.ClustersMeanCenterLambda'] < 2.5e3 ] 
-                # a = a[ a['TauJetsAuxDyn.ClustersMeanSecondLambda'] < 0.5e6]
-                # a = a[ a['TauJetsAuxDyn.ptCombined'] < 0.5e6]
-                # a = a[ a['TauJetsAuxDyn.ClustersMeanPresamplerFrac'] < 0.3]
+                a = a[ a['TauJetsAuxDyn.ptPanTauCellBased/TauJetsAuxDyn.ptCombined'] < 25. ] 
+                a = a[ a['TauJetsAuxDyn.ptIntermediateAxis/TauJetsAuxDyn.ptCombined'] < 25. ] 
                 f = np.stack(
                     [ak.flatten(a[__feat]).to_numpy() for __feat in features])
+                # remove default outliers from PanTau BDT variables
+                if 'TauJetsAuxDyn.PanTau_BDTValue_1p0n_vs_1p1n' in features:
+                    for i in [13, 14, 15]:
+                        f[i][f[i] == -1.111e+03] = -5.1
                 _train  += [f.T]
                 _target += [ak.flatten(a[target]).to_numpy()]
 
@@ -106,7 +104,8 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
             norms = getSSNormalize(_train, _target, savepath=normSavePath)
             _train = applySSNormalize(_train, norms, 
                         vars=getVarIndices(features, varnom))
-            log.info("Indices of variables to be normalized: {}".format(getVarIndices(features, varnom)))
+            log.info("Variables to be normalized: {}".format(
+                list(features[i] for i in getVarIndices(features, VARNORM))))
             if not no_norm_target:
                 log.info('Normalizing validation data')
                 _target = StandardScalar(_target, norms[len(norms) - 1][0], norms[len(norms) - 1][1])
@@ -121,7 +120,9 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
 
 def testing_data(
         path, dataset, features, plotting_fields, regressor, 
-        nfiles=-1, select_1p=False, select_3p=False, tree_name='CollectionTree',saveToCache=False, useCache=False, optional_path='', no_normalize=False, no_norm_target=False, normIndices=range(8)):
+        nfiles=-1, select_1p=False, select_3p=False, tree_name='CollectionTree',
+        saveToCache=False, useCache=False, optional_path='', 
+        no_normalize=False, no_norm_target=False, normIndices=range(8)):
     """
     """
     import numpy as np

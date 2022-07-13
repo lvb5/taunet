@@ -29,8 +29,14 @@ def response_curve(res, var, bins):
         # y = np.quantile(a, [q1, q2])
         # res_68 = (y[1] - y[0]) / 2.
         # print (_bin, len(a), a.mean(), mean, a.std(), std, (y[1] - y[0]) / 2., np.quantile(a-1, 0.95))
+        # print(sum(a > 10 ** 3))
+        # if _bin == (60, 70):
+        #     a = a[a < 10 ** 3]
         _means += [np.mean(a)]
         _mean_stat_err += [np.std(a, ddof=1) / np.sqrt(np.size(a))]
+        # print("Bin {} with size {} has mean {} and error {}".format(
+        #     _bin, np.size(a), np.mean(a), np.std(a, ddof=1) / np.sqrt(np.size(a))
+        # ))
         _resol += [get_quantile_width(a)]
         _bin_centers += [_bin[0] + (_bin[1] - _bin[0]) / 2]
         _bin_errors += [(_bin[1] - _bin[0]) / 2]

@@ -22,7 +22,7 @@ if __name__ == '__main__':
     args = train_parser.parse_args()
 
     if args.debug:
-        n_files = 3 #set limit on files for testing / debugging
+        n_files = 7 #set limit on files for testing / debugging
     else:
         n_files = -1
     
@@ -48,7 +48,7 @@ if __name__ == '__main__':
         print (adam.learning_rate)
         adam.learning_rate = rate
         print (adam.learning_rate)
-        _epochs = 200
+        _epochs = 250
         regressor.compile(
             loss='mean_squared_error', 
             optimizer=adam, 

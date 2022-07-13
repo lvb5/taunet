@@ -184,7 +184,8 @@ def testing_data(
             # append_fields(_arr, 'regressed_target', regressed_target, usemask=False)
             _arrs += [_arr]
 
-    log.info("Indices of variables normalized: {}".format(getVarIndices(features, varnom)))
+    log.info("Variables normalized: {}".format(
+                list(features[i] for i in getVarIndices(features, VARNORM))))
     _arrs = np.concatenate(_arrs)
     log.info('Total testing input = {}'.format(_arrs.shape))
     if saveToCache:

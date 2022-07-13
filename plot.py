@@ -31,7 +31,7 @@ if __name__ == '__main__':
     args = plot_parser.parse_args()
 
     if args.debug:
-        n_files = 2
+        n_files = 3
     else:
         n_files = -1
 
@@ -43,10 +43,12 @@ if __name__ == '__main__':
     # loads result of training to make plots 
     #! I did some weird things here... be careful when running with different 
     #! models, etc
-    if path != '':
+    if path != '' and not args.use_cache:
         regressor = tf.keras.models.load_model(os.path.join(path, args.model))
-    else:
+    elif not args.use_cache:
         regressor = tf.keras.models.load_model(os.path.join('cache', args.model))
+    else:
+        regressor = ''
 
     d = testing_data(
         PATH, DATASET, FEATURES, TRUTH_FIELDS + OTHER_TES, regressor, nfiles=n_files, 

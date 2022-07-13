@@ -74,7 +74,8 @@ def pt_lineshape(testing_data, plotSaveLoc):
     plt.savefig(os.path.join(plotSaveLoc, 'plots/tes_pt_lineshape.pdf'))
     plt.close(fig)
 
-def response_lineshape(testing_data, plotSaveLoc):
+def response_lineshape(testing_data, plotSaveLoc, 
+            plotSaveName='plots/tes_response_lineshape.pdf'):
     """
     """
     log.info('Plotting the response lineshape on the dataset')
@@ -104,7 +105,7 @@ def response_lineshape(testing_data, plotSaveLoc):
     plt.ylabel('Number of $\\tau_{had-vis}$', loc = 'top')
     plt.xlabel('Predicted $p_{T}(\\tau_{had-vis})$ / True $p_{T}(\\tau_{had-vis})$', loc = 'right')
     plt.legend()
-    plt.savefig(os.path.join(plotSaveLoc, 'plots/tes_response_lineshape.pdf'))
+    plt.savefig(os.path.join(plotSaveLoc, plotSaveName))
     plt.yscale('linear')
     plt.close(fig)
     
@@ -150,7 +151,8 @@ def target_lineshape(testing_data, bins=100, range=(0, 10), basename='tes_target
     plt.close(fig)
     
 
-def response_and_resol_vs_pt(testing_data, plotSaveLoc):
+def response_and_resol_vs_pt(testing_data, plotSaveLoc, 
+        plotSaveName='plots/tes_mdn_resolution_vs_truth_pt.pdf'):
     """
     """
     log.info('plotting the response and resolution versus pt')
@@ -181,7 +183,7 @@ def response_and_resol_vs_pt(testing_data, plotSaveLoc):
     bins_comb, bin_errors_comb, means_comb, errs_comb, resol_comb = response_curve(response_comb, truth_pt, bins)
 
     fig = plt.figure(figsize=(5,5), dpi = 300)
-    plt.ticklabel_format(axis='y',style='sci',scilimits=(-3,3))
+    plt.ticklabel_format(axis='y',style='sci', scilimits=(-3,3))
     plt.errorbar(bins_comb, means_comb, errs_comb, bin_errors_comb, fmt='o', color='black', label='Combined')
     plt.errorbar(bins_ref, means_ref, errs_ref, bin_errors_ref, fmt='o', color='red', label='Final')
     plt.errorbar(bins_reg, means_reg, errs_reg, bin_errors_reg, fmt='o', color='purple', label='This work')
@@ -199,5 +201,5 @@ def response_and_resol_vs_pt(testing_data, plotSaveLoc):
     plt.ylabel('$p_{T}(\\tau_{had-vis})$ resolution [\%]', loc = 'top')
     plt.xlabel('True $p_{T}(\\tau_{had-vis})$ [GeV]', loc = 'right')
     plt.legend()
-    plt.savefig(os.path.join(plotSaveLoc, 'plots/tes_mdn_resolution_vs_truth_pt.pdf'))
+    plt.savefig(os.path.join(plotSaveLoc, plotSaveName))
     plt.close(fig)

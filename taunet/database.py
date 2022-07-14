@@ -4,13 +4,17 @@ Database changes:
     - removed nTracks from vairiable list and cuts
 """
 import os
+from unittest.mock import DEFAULT
 
 from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalizeTest, getVarIndices, select_norms, VARNORM, applySSNormalize
 from . import log; log = log.getChild(__name__)
 
-DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Round3/TES/'
+# DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Round3/TES/'
+# PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
+# DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
+DEFAULT_PATH = '/eos/atlas/user/m/mcochran/THOR/MxAODCreator'
 PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
-DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
+DATASET = "mc20_13TeV.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight.recon.AOD.e5468_s3674_r13224.root"
 
 def file_list(path, dataset):
     """

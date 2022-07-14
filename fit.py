@@ -22,7 +22,7 @@ if __name__ == '__main__':
     args = train_parser.parse_args()
 
     if args.debug:
-        n_files = 7 #set limit on files for testing / debugging
+        n_files = 6 #set limit on files for testing / debugging
     else:
         n_files = -1
     

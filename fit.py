@@ -34,9 +34,9 @@ if __name__ == '__main__':
 
     # import model
     #! note: could have broken normalization??!?
-    from taunet.models import keras_model_terry
+    from taunet.models import keras_model_terry, keras_model_main
     #regressor = keras_model_main(len(FEATURES))
-    regressor = keras_model_terry(len(FEATURES))
+    regressor = keras_model_main(len(FEATURES))
     # create location to save training
     _model_file = os.path.join('cache', regressor.name+'.h5')
     try:

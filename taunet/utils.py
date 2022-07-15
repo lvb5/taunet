@@ -22,6 +22,8 @@ def response_curve(res, var, bins):
     _means = []
     _mean_stat_err = []
     _resol = []
+    _numRemoved = []
+    _fracRemoved = []
     for _bin in bins:
         a = res[(var > _bin[0]) & (var < _bin[1])]
         # mean = 
@@ -29,18 +31,20 @@ def response_curve(res, var, bins):
         # y = np.quantile(a, [q1, q2])
         # res_68 = (y[1] - y[0]) / 2.
         # print (_bin, len(a), a.mean(), mean, a.std(), std, (y[1] - y[0]) / 2., np.quantile(a-1, 0.95))
-        # print(sum(a > 10 ** 3))
-        # if _bin == (60, 70):
-        #     a = a[a < 10 ** 3]
+        # make some cuts here to take care of outlierss
+        # a = a[a < 1e3]
+        # a = a[a > 1e-3]
+        # numAbove = sum(a[a > 1e3])
+        # numBelow = sum(a[a < 1e-3])
+        # _numRemoved += [numAbove + numBelow]
+        # _fracRemoved += [(numAbove + numBelow) / len(a)]
         _means += [np.mean(a)]
         _mean_stat_err += [np.std(a, ddof=1) / np.sqrt(np.size(a))]
-        # print("Bin {} with size {} has mean {} and error {}".format(
-        #     _bin, np.size(a), np.mean(a), np.std(a, ddof=1) / np.sqrt(np.size(a))
-        # ))
         _resol += [get_quantile_width(a)]
         _bin_centers += [_bin[0] + (_bin[1] - _bin[0]) / 2]
         _bin_errors += [(_bin[1] - _bin[0]) / 2]
-    return np.array(_bin_centers), np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), np.array(_resol)
+    return np.array(_bin_centers), np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), \
+           np.array(_resol), np.array(_numRemoved), np.array(_fracRemoved)
 
 
 def copy_plots_to_cernbox(fmt='pdf', location='taunet_plots'):

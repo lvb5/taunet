@@ -178,9 +178,9 @@ def response_and_resol_vs_pt(testing_data, plotSaveLoc,
         (150, 200),
     ]
 
-    bins_reg, bin_errors_reg, means_reg, errs_reg, resol_reg = response_curve(response_reg, truth_pt, bins)
-    bins_ref, bin_errors_ref, means_ref, errs_ref, resol_ref = response_curve(response_ref, truth_pt, bins)
-    bins_comb, bin_errors_comb, means_comb, errs_comb, resol_comb = response_curve(response_comb, truth_pt, bins)
+    bins_reg, bin_errors_reg, means_reg, errs_reg, resol_reg, remove_reg, frac_reg = response_curve(response_reg, truth_pt, bins)
+    bins_ref, bin_errors_ref, means_ref, errs_ref, resol_ref, remove_ref, frac_ref = response_curve(response_ref, truth_pt, bins)
+    bins_comb, bin_errors_comb, means_comb, errs_comb, resol_comb, remove_comb, frac_comb = response_curve(response_comb, truth_pt, bins)
 
     fig = plt.figure(figsize=(5,5), dpi = 300)
     plt.ticklabel_format(axis='y',style='sci', scilimits=(-3,3))
@@ -203,3 +203,12 @@ def response_and_resol_vs_pt(testing_data, plotSaveLoc,
     plt.legend()
     plt.savefig(os.path.join(plotSaveLoc, plotSaveName))
     plt.close(fig)
+
+    # fig = plt.figure(figsize=(5,5), dpi = 300)
+    # fig, (ax1, ax2) = plt.subplots(2)
+    # ax1.hist(remove_reg, bins = len(remove_reg), histtype = 'step', color = 'red')
+    # ax2.hist(frac_reg, bins = len(frac_reg), histtype = 'step', color = 'blue')
+    # ax1.set_title('Number of events removed')
+    # ax2.set_title('Fraction of events removed')
+    # plt.savefig(os.path.join(plotSaveLoc, 'plots/tes_mdn_res_removed_events.pdf'))
+    # plt.close(fig)

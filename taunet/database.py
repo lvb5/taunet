@@ -14,7 +14,7 @@ from . import log; log = log.getChild(__name__)
 # DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
 DEFAULT_PATH = '/eos/user/m/mcochran/THOR_tests'
 PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
-DATASET = "test1"
+DATASET = "test2"
 
 def file_list(path, dataset):
     """

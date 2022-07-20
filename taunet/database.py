@@ -12,9 +12,10 @@ from . import log; log = log.getChild(__name__)
 # DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Round3/TES/'
 # PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
 # DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
-DEFAULT_PATH = '/eos/user/m/mcochran/THOR_tests'
+# DEFAULT_PATH = '/eos/user/m/mcochran/THOR_tests'
+DEFAULT_PATH = '/Users/miles_cb/cernbox/TES_dataset'
 PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
-DATASET = "test1"
+DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
 
 def file_list(path, dataset):
     """

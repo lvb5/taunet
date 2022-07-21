@@ -8,9 +8,14 @@ import os
 from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalizeTest, getVarIndices, select_norms, VARNORM, applySSNormalize
 from . import log; log = log.getChild(__name__)
 
-DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Round3/TES/'
-PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
-DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
+if '/afs/cern.ch/' in os.getcwd():
+    DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Round3/TES/'
+    PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
+    DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
+else:
+    DEFAULT_PATH = '/Users/miles_cb/cernbox'
+    PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
+    DATASET = 'temp_TES_data'
 
 def file_list(path, dataset):
     """

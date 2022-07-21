@@ -35,6 +35,7 @@ OTHER_TES = [
     'TauJetsAuxDyn.etaCombined',
     'TauJetsAuxDyn.ptFinalCalib',
     'TauJetsAuxDyn.etaFinalCalib', 
+    'TauJetsAuxDyn.mu',
 ]
 
 TARGET_FIELD = 'TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptCombined'

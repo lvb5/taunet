@@ -24,3 +24,5 @@ plot_parser.add_argument('--copy-to-cernbox', default=False, action='store_true'
 plot_parser.add_argument('--path', default='')
 plot_parser.add_argument('--use-cache', default=False, action='store_true')
 plot_parser.add_argument('--add-to-cache', default=False, action='store_true')
+plot_parser.add_argument('--no-plot', default=False, action="store_true")
+plot_parser.add_argument('--CI', type=float, default=0.68)

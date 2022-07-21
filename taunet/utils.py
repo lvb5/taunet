@@ -4,17 +4,17 @@ import subprocess
 
 from . import log; log = log.getChild(__name__)
 
-def get_quantile_width(arr, cl=0.68):
+def get_quantile_width(arr, ci=0.68):
     """
     """
-    q1 = (1. - cl) / 2.
+    q1 = (1. - ci) / 2.
     q2 = 1. - q1
     y = np.quantile(arr, [q1, q2])
     width = (y[1] - y[0]) / 2.
     return width
 
 
-def response_curve(res, var, bins):
+def response_curve(res, var, bins, ci=0.68):
     """
     """
     _bin_centers = []
@@ -22,8 +22,6 @@ def response_curve(res, var, bins):
     _means = []
     _mean_stat_err = []
     _resol = []
-    _numRemoved = []
-    _fracRemoved = []
     for _bin in bins:
         a = res[(var > _bin[0]) & (var < _bin[1])]
         # mean = 
@@ -40,10 +38,10 @@ def response_curve(res, var, bins):
         # _fracRemoved += [(numAbove + numBelow) / len(a)]
         _means += [np.mean(a)]
         _mean_stat_err += [np.std(a, ddof=1) / np.sqrt(np.size(a))]
-        _resol += [get_quantile_width(a)]
+        _resol += [get_quantile_width(a, ci=ci)]
         _bin_centers += [_bin[0] + (_bin[1] - _bin[0]) / 2]
         _bin_errors += [(_bin[1] - _bin[0]) / 2]
-    return np.array(_bin_centers), np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), np.array(_resol) #, np.array(_numRemoved), np.array(_fracRemoved)
+    return _bin_centers, np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), np.array(_resol)
 
 
 def copy_plots_to_cernbox(fmt='pdf', location='taunet_plots'):

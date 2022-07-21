@@ -43,8 +43,7 @@ def response_curve(res, var, bins):
         _resol += [get_quantile_width(a)]
         _bin_centers += [_bin[0] + (_bin[1] - _bin[0]) / 2]
         _bin_errors += [(_bin[1] - _bin[0]) / 2]
-    return np.array(_bin_centers), np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), \
-           np.array(_resol), np.array(_numRemoved), np.array(_fracRemoved)
+    return np.array(_bin_centers), np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), np.array(_resol) #, np.array(_numRemoved), np.array(_fracRemoved)
 
 
 def copy_plots_to_cernbox(fmt='pdf', location='taunet_plots'):

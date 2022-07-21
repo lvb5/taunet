@@ -32,7 +32,9 @@ TRUTH_FIELDS = [
 
 OTHER_TES = [
     'TauJetsAuxDyn.ptCombined',
+    'TauJetsAuxDyn.etaCombined',
     'TauJetsAuxDyn.ptFinalCalib',
+    'TauJetsAuxDyn.etaFinalCalib', 
 ]
 
 TARGET_FIELD = 'TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptCombined'

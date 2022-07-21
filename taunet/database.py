@@ -13,9 +13,9 @@ if '/afs/cern.ch/' in os.getcwd():
     PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
     DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
 else:
-    DEFAULT_PATH = '/Users/miles_cb/cernbox'
+    DEFAULT_PATH = '/Users/miles_cb/cernbox/TES_dataset'
     PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
-    DATASET = 'temp_TES_data'
+    DATASET = 'group.perf-tau.Round3_FinalMVATES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
 
 def file_list(path, dataset):
     """
@@ -56,7 +56,7 @@ def retrieve_arrays(tree, fields, cut=None, select_1p=False, select_3p=False):
 
     return arrays
         
-def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, select_3p=False, use_cache=False, tree_name='CollectionTree', no_normalize=False, no_norm_target=False, normSavePath='data/normFactors', normIndices=range(8)):
+def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, select_3p=False, use_cache=False, tree_name='CollectionTree', no_normalize=False, no_norm_target=False, normSavePath='data/normFactors', normIndices=range(9)):
     """
     """
     if use_cache:
@@ -127,7 +127,7 @@ def testing_data(
         path, dataset, features, plotting_fields, regressor, 
         nfiles=-1, select_1p=False, select_3p=False, tree_name='CollectionTree',
         saveToCache=False, useCache=False, optional_path='', 
-        no_normalize=False, no_norm_target=False, normIndices=range(8)):
+        no_normalize=False, no_norm_target=False, normIndices=range(9)):
     """
     """
     import numpy as np

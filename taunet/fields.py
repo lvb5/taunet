@@ -1,6 +1,9 @@
 """
 """
 #? What are these? 
+from http.client import PROCESSING
+
+
 FEATURES = [
     'TauJetsAuxDyn.mu', # average of two following effects:
     'TauJetsAuxDyn.nVtxPU', #number of vertices (tracking effects), Terry doesn't use
@@ -21,7 +24,7 @@ FEATURES = [
     # 'TauJetsAuxDyn.nTracks',
     'TauJetsAuxDyn.PFOEngRelDiff', #upsilon; quantifies polar
     'TauJetsAuxDyn.ptTauEnergyScale',
-    'TauJetsAuxDyn.NNDecayMode',
+    # 'TauJetsAuxDyn.NNDecayMode',
     'TauJetsAuxDyn.NNDecayModeProb_1p0n',
     'TauJetsAuxDyn.NNDecayModeProb_1p1n',
     'TauJetsAuxDyn.NNDecayModeProb_1pXn',
@@ -42,3 +45,5 @@ OTHER_TES = [
 ]
 
 TARGET_FIELD = 'TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptCombined'
+
+PROCESSING_FIELDS = FEATURES + TRUTH_FIELDS + OTHER_TES + ['EventInfoAuxDyn.eventNumber'] + ['EventInfoAuxDyn.nTracks']

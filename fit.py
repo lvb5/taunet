@@ -24,13 +24,13 @@ if __name__ == '__main__':
     if args.debug:
         n_files = 1 #set limit on files for testing / debugging
     else:
-        n_files = -1
+        n_files = args.nfiles
     
     # get training data
     X_train, X_val, y_train, y_val, test1, test2 = training_data(
         PATH, DATASET, FEATURES, TARGET_FIELD, nfiles=n_files, 
         select_1p=args.oneProng, select_3p=args.threeProngs, normIndices=list(map(int, args.normIDs)), 
-        no_normalize=args.no_normalize, no_norm_target=args.no_norm_target)
+        no_normalize=args.no_normalize, no_norm_target=args.no_norm_target, debug=args.debug)
 
     # import model
     #! note: could have broken normalization??!?

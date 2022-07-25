@@ -31,7 +31,7 @@ if __name__ == '__main__':
     args = plot_parser.parse_args()
 
     if args.debug:
-        n_files = 3
+        n_files = 1
     else:
         n_files = args.nfiles
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         PATH, DATASET, FEATURES, TRUTH_FIELDS + OTHER_TES, regressor, nfiles=n_files, 
         optional_path=path, select_1p=args.oneProng, select_3p=args.threeProngs, 
         no_normalize=args.no_normalize, no_norm_target=args.no_norm_target, normIndices=list(map(int, args.normIDs)), 
-        saveToCache=args.add_to_cache, useCache=args.use_cache)
+        saveToCache=args.add_to_cache, useCache=args.use_cache, debug=args.debug)
 
     from taunet.plotting import nn_history
     nn_history(os.path.join(path, 'history.p'), path)

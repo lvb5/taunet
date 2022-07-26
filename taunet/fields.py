@@ -45,5 +45,3 @@ OTHER_TES = [
 ]
 
 TARGET_FIELD = 'TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptCombined'
-
-PROCESSING_FIELDS = FEATURES + TRUTH_FIELDS + OTHER_TES + ['EventInfoAuxDyn.eventNumber'] + ['EventInfoAuxDyn.nTracks']

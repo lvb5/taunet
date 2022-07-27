@@ -158,7 +158,7 @@ def response_and_resol_vs_pt(testing_data, plotSaveLoc,
     log.info('plotting the response and resolution versus pt')
     from .utils import response_curve
 
-    response_reg = testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptCombined'] / testing_data['TauJetsAuxDyn.truthPtVisDressed']
+    response_reg = testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptTauEnergyScale'] / testing_data['TauJetsAuxDyn.truthPtVisDressed']
     response_ref = testing_data['TauJetsAuxDyn.ptFinalCalib'] / testing_data['TauJetsAuxDyn.truthPtVisDressed']
     response_comb = testing_data['TauJetsAuxDyn.ptCombined'] / testing_data['TauJetsAuxDyn.truthPtVisDressed']
     truth_pt = testing_data['TauJetsAuxDyn.truthPtVisDressed'] / 1000. 

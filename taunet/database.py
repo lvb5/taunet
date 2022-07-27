@@ -124,6 +124,8 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
         _target = _target.reshape(_target.shape[0], 1)
         log.info('Total training input = {}'.format(_train.shape))
 
+        oldTarg = np.array(_target)
+
         #normalize here!
         old_train = np.array(_train)
         varnom = select_norms(VARNORM, normIndices)
@@ -143,8 +145,7 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
             _train, _target, test_size=0.2, random_state=42)
         log.info('Total validation input {}'.format(len(X_val)))
 
-
-    return X_train, X_val, y_train, y_val
+    return X_train, X_val, y_train, y_val, oldTarg, _target
 
 def testing_data(
         path, dataset, features, plotting_fields, regressor, 

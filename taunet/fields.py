@@ -37,8 +37,9 @@ TRUTH_FIELDS = [
     ]
 
 OTHER_TES = [
+    'TauJetsAuxDyn.ptTauEnergyScale',
     'TauJetsAuxDyn.ptCombined',
     'TauJetsAuxDyn.ptFinalCalib',
 ]
 
-TARGET_FIELD = 'TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptCombined'
+TARGET_FIELD = 'TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptTauEnergyScale'

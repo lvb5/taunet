@@ -59,7 +59,7 @@ def pt_lineshape(testing_data, plotSaveLoc):
         color='red')
         #label='Final, $\\chi^2 = ${}'.format(chi_squared(counts_f, counts_t)))
     counts_ts, bins_ts, bars_ts = plt.hist(
-        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptCombined'] / 1000.,
+        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptTauEnergyScale'] / 1000.,
         bins=200,
         range=(0, 200), 
         histtype='step',
@@ -74,31 +74,6 @@ def pt_lineshape(testing_data, plotSaveLoc):
     plt.savefig(os.path.join(plotSaveLoc, 'plots/tes_pt_lineshape.pdf'))
     plt.close(fig)
 
-    fig = plt.figure(figsize=(5,5), dpi = 300)
-    plt.ticklabel_format(axis='y',style='sci',scilimits=(-3,3))
-    plt.hist(
-        counts_b / counts_t,
-        bins=200,
-        range=(0, 200), 
-        histtype='step',
-        color='black')
-        #label='Combined')
-    plt.hist(
-        counts_f / counts_t,
-        bins=200,
-        range=(0, 200), 
-        histtype='step',
-        color='red')
-        #label='Final, $\\chi^2 = ${}'.format(chi_squared(counts_f, counts_t)))
-    plt.hist(
-        counts_ts / counts_t,
-        bins=200,
-        range=(0, 200), 
-        histtype='step',
-        color='purple')
-    plt.savefig(os.path.join(plotSaveLoc, "plots/test.pdf"))
-    plt.close(fig)
-
 def response_lineshape(testing_data, plotSaveLoc, 
             plotSaveName='plots/tes_response_lineshape.pdf'):
     """
@@ -107,7 +82,7 @@ def response_lineshape(testing_data, plotSaveLoc,
     fig = plt.figure(figsize=(5,5), dpi = 300)
     plt.yscale('log')
     plt.hist(
-        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptCombined'] / testing_data['TauJetsAuxDyn.truthPtVisDressed'],
+        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.TauJetsAuxDyn.ptTauEnergyScale'] / testing_data['TauJetsAuxDyn.truthPtVisDressed'],
         bins=200, 
         range=(0, 2), 
         histtype='step', 
@@ -145,27 +120,27 @@ def target_lineshape(testing_data, bins=100, range=(0, 10), basename='tes_target
         plt.yscale('log')
     if not logy:
         plt.ticklabel_format(axis='y',style='sci',scilimits=(-3,3))
+    # Truth / ptTauEnergyScale
     counts_t, bins_t, bars_t = plt.hist(
-        testing_data['TauJetsAuxDyn.truthPtVisDressed'] / testing_data['TauJetsAuxDyn.ptCombined'],
+        testing_data['TauJetsAuxDyn.truthPtVisDressed'] / testing_data['TauJetsAuxDyn.ptTauEnergyScale'],
         bins=bins, 
         range=range, 
         histtype='stepfilled', 
         color='cyan')
-        #label='Truth / Combined')
+    # Final / comb. 
     counts_f, bins_f, bars_f = plt.hist(
-        testing_data['TauJetsAuxDyn.ptFinalCalib'] / testing_data['TauJetsAuxDyn.ptCombined'],
+        testing_data['TauJetsAuxDyn.ptFinalCalib'] / testing_data['TauJetsAuxDyn.ptTauEnergyScale'],
         bins=bins, 
         range=range, 
         histtype='step', 
         color='red')
-        #label='Final / Combined')
+    # This work
     counts_m, bins_m, bars_m = plt.hist(
         testing_data['regressed_target'],
         bins=bins, 
         range=range, 
         histtype='step', 
         color='purple')
-        #label='This work')
     plt.ylabel('Number of $\\tau_{had-vis}$', loc = 'top')
     plt.xlabel('Regressed target', loc = 'right')
     plt.legend(['Truth / Comb.',

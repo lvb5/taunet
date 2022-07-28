@@ -82,7 +82,7 @@ def response_lineshape(testing_data, plotSaveLoc,
     fig = plt.figure(figsize=(5,5), dpi = 300)
     plt.yscale('log')
     plt.hist(
-        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.TauJetsAuxDyn.ptTauEnergyScale'] / testing_data['TauJetsAuxDyn.truthPtVisDressed'],
+        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptTauEnergyScale'] / testing_data['TauJetsAuxDyn.truthPtVisDressed'],
         bins=200, 
         range=(0, 2), 
         histtype='step', 
@@ -143,8 +143,8 @@ def target_lineshape(testing_data, bins=100, range=(0, 10), basename='tes_target
         color='purple')
     plt.ylabel('Number of $\\tau_{had-vis}$', loc = 'top')
     plt.xlabel('Regressed target', loc = 'right')
-    plt.legend(['Truth / Comb.',
-                'Final / Comb., $\\chi^2 = {}$'.format(round(chi_squared(counts_f, counts_t))), 
+    plt.legend(['Truth / p_T \\tau energy scale',
+                'Final / p_T \\tau energy scale, $\\chi^2 = {}$'.format(round(chi_squared(counts_f, counts_t))), 
                 'This work, $\\chi^2 = {}$'.format(round(chi_squared(counts_m, counts_t)))])
     plt.savefig(os.path.join(plotSaveLoc, 'plots/{}.pdf'.format(basename)))
     plt.yscale('linear')

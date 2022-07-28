@@ -99,3 +99,7 @@ VARNORM = [
     'TauJetsAuxDyn.etaPanTauCellBased',
     'TauJetsAuxDyn.ptTauEnergyScale'
 ]
+
+#%% Loss function for MND
+def tf_mdn_loss(y, model):
+    return -model.log_prob(y)

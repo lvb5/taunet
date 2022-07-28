@@ -28,10 +28,14 @@ if __name__ == '__main__':
         cmd = 'mkdir -p {}'.format(os.path.join(path, 'plots'))
         subprocess.run(cmd, shell=True)
     # loads result of training to make plots 
-    if path != '' and not args.use_cache:
+    if path != '' and not args.use_cache and not args.mdn:
         regressor = tf.keras.models.load_model(os.path.join(path, args.model))
-    elif not args.use_cache:
+    elif not args.use_cache and not args.mdn:
         regressor = tf.keras.models.load_model(os.path.join('cache', args.model))
+    elif not args.use_cache and args.mdn:
+        from taunet.computation import tf_mdn_loss
+        import tensorflow_probability as tfp
+        regressor = tf.keras.models.load_model(os.path.join(path, args.model), custom_objects={'MixtureNormal': tfp.layers.MixtureNormal, 'tf_mdn_loss': tf_mdn_loss})
     else:
         regressor = ''
         #print("Using cached data")
@@ -80,46 +84,6 @@ if __name__ == '__main__':
         from taunet.utils import response_curve, response_curve_2vars
         plotSaveLoc = path
 
-        # pT_bins = [
-        #     # (0, 10),
-        #     (10, 20),
-        #     (20, 30),
-        #     (30, 40),
-        #     (40, 50),
-        #     (50, 60),
-        #     (60, 70),
-        #     (70, 80),
-        #     (80, 90),
-        #     (90, 100),
-        #     (100, 150),
-        #     #(150, 200),
-        # ]
-
-        # eta_bins = [
-        #     (-2.5, -2.0),
-        #     (-2.0, -1.5),
-        #     (-1.5, -1.0),
-        #     (-1.0, -0.5),
-        #     (-0.5, 0.0),
-        #     (0.0, 0.5),
-        #     (0.5, 1.0),
-        #     (1.0, 1.5),
-        #     (1.5, 2.0),
-        #     (2.0, 2.5)
-        # ]
-
-        # mu_bins = [
-        #     (0, 10),
-        #     (10, 20),
-        #     (20, 30),
-        #     (30, 40),
-        #     (40, 50), 
-        #     (50, 60),
-        #     (60, 65),
-        #     (65, 70),
-        #     (70, 75),
-        #     (75, 80)
-        # ]
         nbins = 25
         pT_bins = makeBins(10, 200, nbins)
         eta_bins = makeBins(-2.5, 2.5, nbins)

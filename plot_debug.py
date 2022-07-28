@@ -16,7 +16,6 @@ if __name__ == '__main__':
 
     if not args.use_cache:
         import tensorflow as tf
-
     if args.debug:
         n_files = 7
     else:

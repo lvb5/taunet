@@ -43,7 +43,7 @@ if __name__ == '__main__':
         PATH, DATASET, FEATURES, list(set(TRUTH_FIELDS + OTHER_TES + KINEMATICS)), regressor, nfiles=n_files, 
         optional_path=path, select_1p=args.oneProng, select_3p=args.threeProngs, 
         no_normalize=args.no_normalize, no_norm_target=args.no_norm_target, 
-        saveToCache=args.add_to_cache, useCache=args.use_cache)
+        saveToCache=args.add_to_cache, useCache=args.use_cache, debug=args.debug)
 
 #%% ----------------------------------------------------
     #local save to cernbox
@@ -65,6 +65,14 @@ if __name__ == '__main__':
     truth_eta = d['TauJetsAuxDyn.truthEtaVisDressed']
     mu = d['TauJetsAuxDyn.mu']
 
+    def makeBins(bmin, bmax, nbins):
+        returnBins = []
+        stepsize = (bmax - bmin) / nbins
+        for i in range(nbins):
+            returnBins.append((bmin + i*stepsize, bmin + (i+1)*stepsize))
+        return returnBins
+
+
 #%% ----------------------------------------------------
 # make resolution plot with eta, mu, and p_T
     def run_resolution_plots():
@@ -72,46 +80,50 @@ if __name__ == '__main__':
         from taunet.utils import response_curve, response_curve_2vars
         plotSaveLoc = path
 
-        pT_bins = [
-            # (0, 10),
-            (10, 20),
-            (20, 30),
-            (30, 40),
-            (40, 50),
-            (50, 60),
-            (60, 70),
-            (70, 80),
-            (80, 90),
-            (90, 100),
-            (100, 150),
-            #(150, 200),
-        ]
+        # pT_bins = [
+        #     # (0, 10),
+        #     (10, 20),
+        #     (20, 30),
+        #     (30, 40),
+        #     (40, 50),
+        #     (50, 60),
+        #     (60, 70),
+        #     (70, 80),
+        #     (80, 90),
+        #     (90, 100),
+        #     (100, 150),
+        #     #(150, 200),
+        # ]
 
-        eta_bins = [
-            (-2.5, -2.0),
-            (-2.0, -1.5),
-            (-1.5, -1.0),
-            (-1.0, -0.5),
-            (-0.5, 0.0),
-            (0.0, 0.5),
-            (0.5, 1.0),
-            (1.0, 1.5),
-            (1.5, 2.0),
-            (2.0, 2.5)
-        ]
+        # eta_bins = [
+        #     (-2.5, -2.0),
+        #     (-2.0, -1.5),
+        #     (-1.5, -1.0),
+        #     (-1.0, -0.5),
+        #     (-0.5, 0.0),
+        #     (0.0, 0.5),
+        #     (0.5, 1.0),
+        #     (1.0, 1.5),
+        #     (1.5, 2.0),
+        #     (2.0, 2.5)
+        # ]
 
-        mu_bins = [
-            (0, 10),
-            (10, 20),
-            (20, 30),
-            (30, 40),
-            (40, 50), 
-            (50, 60),
-            (60, 65),
-            (65, 70),
-            (70, 75),
-            (75, 80)
-        ]
+        # mu_bins = [
+        #     (0, 10),
+        #     (10, 20),
+        #     (20, 30),
+        #     (30, 40),
+        #     (40, 50), 
+        #     (50, 60),
+        #     (60, 65),
+        #     (65, 70),
+        #     (70, 75),
+        #     (75, 80)
+        # ]
+        nbins = 25
+        pT_bins = makeBins(10, 200, nbins)
+        eta_bins = makeBins(-2.5, 2.5, nbins)
+        mu_bins = makeBins(0, 80, nbins)
 
         CL = args.CL #confidence internval
 
@@ -146,13 +158,14 @@ if __name__ == '__main__':
         plot1dResolution(bins_rfEta, resol_rfEta, resol_cEta, resol_rgEta, 
             'True $\\eta (\\tau_{had-vis})$', savetitle='explorationPlots/eta_resol_{}CL.pdf'.format(int(CL*100)))
         plot1dResolution(bins_rfMu, resol_rfMu, resol_cMu, resol_rgMu, 
-            'Sample $\\mu (\\tau_{had-vis}$', savetitle='explorationPlots/mu_resol_{}CL.pdf'.format(int(round(CL*100))))
+            'Sample $\\mu (\\tau_{had-vis})$', savetitle='explorationPlots/mu_resol_{}CL.pdf'.format(int(round(CL*100))))
 
         def plotHeatMapResolution(data, xbins, ybins, restitle, xtitle, ytitle, savetitle=''):
             fig, ax = plt.subplots()
             im = ax.imshow(data.T)
-            ax.set_xticks(np.arange(len(xbins)), map(str, xbins))
-            ax.set_yticks(np.arange(len(ybins)), map(str, ybins))
+            ax.set_xticks(np.arange(len(xbins)), map(str, map(round,xbins)))
+            ax.set_yticks(np.arange(len(ybins)), [str(round(ybins[i], 1)) for i in range(len(ybins))])
+            plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
             ax.invert_yaxis()
             cbar = ax.figure.colorbar(im, ax=ax)
             cbar.ax.set_ylabel(restitle)
@@ -177,7 +190,7 @@ if __name__ == '__main__':
             plt.show()
 
         if args.copy_to_cernbox:
-            local_copy_to_cernbox(location='explorationPlots')
+            local_copy_to_cernbox(location=os.path.join(path, 'explorationPlots'))
     #execute above code
     run_resolution_plots()
 

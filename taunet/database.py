@@ -10,9 +10,9 @@ from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormal
 from . import log; log = log.getChild(__name__)
 
 if '/Users/miles_cb' in os.getcwd():
-    DEFAULT_PATH = '/Users/miles_cb/cernbox/TES_dataset_new'
+    DEFAULT_PATH = '/Users/miles_cb/cernbox/TES_dataset'
     PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)
-    DATASET = 'group.perf-tau.MC20d_StreamTES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v1_output.root'
+    DATASET = 'group.perf-tau.MC20d_StreamTES.425200.Pythia8EvtGen_A14NNPDF23LO_Gammatautau_MassWeight_v3_output.root'
 else:
     DEFAULT_PATH = '/eos/atlas/atlascerngroupdisk/perf-tau/MxAODs/R22/Run2repro/TES/'
     PATH = os.getenv("TAUNET_PATH", DEFAULT_PATH)

@@ -143,8 +143,8 @@ def target_lineshape(testing_data, bins=100, range=(0, 10), basename='tes_target
         color='purple')
     plt.ylabel('Number of $\\tau_{had-vis}$', loc = 'top')
     plt.xlabel('Regressed target', loc = 'right')
-    plt.legend(['Truth / p_T \\tau energy scale',
-                'Final / p_T \\tau energy scale, $\\chi^2 = {}$'.format(round(chi_squared(counts_f, counts_t))), 
+    plt.legend(['Truth / $p_T \\tau$ energy scale',
+                'Final / $p_T \\tau$ energy scale, $\\chi^2 = {}$'.format(round(chi_squared(counts_f, counts_t))), 
                 'This work, $\\chi^2 = {}$'.format(round(chi_squared(counts_m, counts_t)))])
     plt.savefig(os.path.join(plotSaveLoc, 'plots/{}.pdf'.format(basename)))
     plt.yscale('linear')

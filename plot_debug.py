@@ -22,7 +22,7 @@ if __name__ == '__main__':
         n_files = args.nfiles
 
     #path = args.path # path to where training is stored
-    path = 'bestModels/bestNN'
+    path = 'bestModels/newbestNN'
     # make plot folder if it doesn't already exist
     if not os.path.exists(os.path.join(path, 'plots')):
         cmd = 'mkdir -p {}'.format(os.path.join(path, 'plots'))
@@ -139,7 +139,7 @@ if __name__ == '__main__':
             plt.xlabel(xtitle, loc = 'right')
             plt.legend()
             if savetitle != '':
-                plt.savefig(savetitle)
+                plt.savefig(os.path.join(path, savetitle))
 
         plot1dResolution(bins_ref, resol_ref, resol_comb, resol_reg, 
             'True $p_{T}(\\tau_{had-vis})$ [GeV]', savetitle='explorationPlots/pT_resol_{}CL.pdf'.format(int(CL*100)))
@@ -159,7 +159,7 @@ if __name__ == '__main__':
             plt.xlabel(xtitle, loc = 'right')
             plt.ylabel(ytitle, loc = 'top')
             if savetitle != '':
-                plt.savefig(savetitle)
+                plt.savefig(os.path.join(path, savetitle))
 
         plotHeatMapResolution(resol_pTEta, bins_pT, bins_eta, 
                                 '$p_T (\\tau_{had-vis})$ resolution, '+str(round(CL * 100))+'% CL [%]', 
@@ -179,65 +179,68 @@ if __name__ == '__main__':
         if args.copy_to_cernbox:
             local_copy_to_cernbox(location='explorationPlots')
     #execute above code
-    #run_resolution_plots()
+    run_resolution_plots()
 
 #%% -----------------------------------------------------------------------
     # explore which events are preferentially favored by our model over final
-    def plotPerformance(reg, ref, comb, lims=(0,2), savetitle='', bins=300):
+    def run_best_worst_events():
+        def plotPerformance(reg, ref, comb, lims=(0,2), savetitle='', bins=300):
+            plt.figure(figsize=(5,5), dpi = 100)
+            plt.yscale('log')
+            counts_reg, bins_reg, bars_reg = plt.hist(reg, bins=bins, range=lims, histtype='step', color='purple', label='This work')
+            counts_ref, bins_ref, bars_ref = plt.hist(ref, bins=bins, range=lims, histtype='step', color='red', label='Final')
+            counts_comb, bins_comb, bars_comb = plt.hist(comb, bins=bins, range=lims, histtype='step', color='black', label='Combined')
+            plt.legend()
+            if savetitle != '':
+                plt.savefig(savetitle)
+            return np.array(counts_reg), np.array(counts_ref), np.array(bins_reg)
+
+        reg, ref, bins = plotPerformance(response_reg, response_ref, response_comb)
+
+        # get the bins where perforamce is better
+        better_bins = []
+        for i in range(len(reg)):
+            if reg[i] < ref[i]:
+                better_bins.append((bins[i], bins[i+1]))
+
+        # construct array of bools indexing which events are in the above bins
+        better_events_bools = np.full(len(response_reg), False)
+        for _bin in better_bins:
+            temp = (response_reg > _bin[0]) & (response_reg < _bin[1])
+            better_events_bools = better_events_bools | temp
+
+        # select events that perform better and worse
+        better_events = d[better_events_bools]
+        worse_events = d[~better_events_bools]
+
+        # histogram these two regimes 
+        response_reg_better = better_events['regressed_target'] * better_events['TauJetsAuxDyn.ptCombined'] / better_events['TauJetsAuxDyn.truthPtVisDressed']
+        response_ref_better = better_events['TauJetsAuxDyn.ptFinalCalib'] / better_events['TauJetsAuxDyn.truthPtVisDressed']
+        response_comb_better = better_events['TauJetsAuxDyn.ptCombined'] / better_events['TauJetsAuxDyn.truthPtVisDressed']
+
+        #plotPerformance(response_reg_better, response_ref_better, response_comb_better, bins=200)
+
+        response_reg_worse = worse_events['regressed_target'] * worse_events['TauJetsAuxDyn.ptCombined'] / worse_events['TauJetsAuxDyn.truthPtVisDressed']
+        response_ref_worse = worse_events['TauJetsAuxDyn.ptFinalCalib'] / worse_events['TauJetsAuxDyn.truthPtVisDressed']
+        response_comb_worser = worse_events['TauJetsAuxDyn.ptCombined'] / worse_events['TauJetsAuxDyn.truthPtVisDressed']
+
+        #plotPerformance(response_reg_worse, response_ref_worse, response_comb_worser, bins=200)
+
+        # now, let's inspect some further properties of the variables 
+        ## P_T
         plt.figure(figsize=(5,5), dpi = 100)
-        plt.yscale('log')
-        counts_reg, bins_reg, bars_reg = plt.hist(reg, bins=bins, range=lims, histtype='step', color='purple', label='This work')
-        counts_ref, bins_ref, bars_ref = plt.hist(ref, bins=bins, range=lims, histtype='step', color='red', label='Final')
-        counts_comb, bins_comb, bars_comb = plt.hist(comb, bins=bins, range=lims, histtype='step', color='black', label='Combined')
+        plt.ticklabel_format(axis='y',style='sci',scilimits=(-3,3), useMathText=True)
+        plt.hist(better_events['regressed_target'] * better_events['TauJetsAuxDyn.ptCombined'] / 1000., 
+                histtype='step', bins=200, range=(0,200), color='blue', label='Better Events')
+        plt.hist(worse_events['regressed_target'] * worse_events['TauJetsAuxDyn.ptCombined'] / 1000., 
+                histtype='step', bins=200, range=(0,200), color='red', label='Worse Events')
+        plt.hist(d['regressed_target'] * d['TauJetsAuxDyn.ptCombined'] / 1000., 
+                histtype='step', bins=200, range=(0,200), color='black', label='All Events')
+        plt.xlabel('$p_T (\\tau_{had-vis})$ [GeV]', loc='right')
+        plt.ylabel('Number of $\\tau_{had-vis}$', loc = 'top')
         plt.legend()
-        if savetitle != '':
-            plt.savefig(savetitle)
-        return np.array(counts_reg), np.array(counts_ref), np.array(bins_reg)
 
-    reg, ref, bins = plotPerformance(response_reg, response_ref, response_comb)
+        if not args.no_plot:
+            plt.show()
 
-    # get the bins where perforamce is better
-    better_bins = []
-    for i in range(len(reg)):
-        if reg[i] < ref[i]:
-            better_bins.append((bins[i], bins[i+1]))
-
-    # construct array of bools indexing which events are in the above bins
-    better_events_bools = np.full(len(response_reg), False)
-    for _bin in better_bins:
-        temp = (response_reg > _bin[0]) & (response_reg < _bin[1])
-        better_events_bools = better_events_bools | temp
-
-    # select events that perform better and worse
-    better_events = d[better_events_bools]
-    worse_events = d[~better_events_bools]
-
-    # histogram these two regimes 
-    response_reg_better = better_events['regressed_target'] * better_events['TauJetsAuxDyn.ptCombined'] / better_events['TauJetsAuxDyn.truthPtVisDressed']
-    response_ref_better = better_events['TauJetsAuxDyn.ptFinalCalib'] / better_events['TauJetsAuxDyn.truthPtVisDressed']
-    response_comb_better = better_events['TauJetsAuxDyn.ptCombined'] / better_events['TauJetsAuxDyn.truthPtVisDressed']
-
-    #plotPerformance(response_reg_better, response_ref_better, response_comb_better, bins=200)
-
-    response_reg_worse = worse_events['regressed_target'] * worse_events['TauJetsAuxDyn.ptCombined'] / worse_events['TauJetsAuxDyn.truthPtVisDressed']
-    response_ref_worse = worse_events['TauJetsAuxDyn.ptFinalCalib'] / worse_events['TauJetsAuxDyn.truthPtVisDressed']
-    response_comb_worser = worse_events['TauJetsAuxDyn.ptCombined'] / worse_events['TauJetsAuxDyn.truthPtVisDressed']
-
-    #plotPerformance(response_reg_worse, response_ref_worse, response_comb_worser, bins=200)
-
-    # now, let's inspect some further properties of the variables 
-    ## P_T
-    plt.figure(figsize=(5,5), dpi = 100)
-    plt.ticklabel_format(axis='y',style='sci',scilimits=(-3,3), useMathText=True)
-    plt.hist(better_events['regressed_target'] * better_events['TauJetsAuxDyn.ptCombined'] / 1000., 
-            histtype='step', bins=200, range=(0,200), color='blue', label='Better Events')
-    plt.hist(worse_events['regressed_target'] * worse_events['TauJetsAuxDyn.ptCombined'] / 1000., 
-            histtype='step', bins=200, range=(0,200), color='red', label='Worse Events')
-    plt.hist(d['regressed_target'] * d['TauJetsAuxDyn.ptCombined'] / 1000., 
-            histtype='step', bins=200, range=(0,200), color='black', label='All Events')
-    plt.xlabel('$p_T (\\tau_{had-vis})$ [GeV]', loc='right')
-    plt.ylabel('Number of $\\tau_{had-vis}$', loc = 'top')
-    plt.legend()
-
-    if not args.no_plot:
-        plt.show()
+    #run_best_worst_events()

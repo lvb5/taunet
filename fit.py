@@ -81,7 +81,7 @@ if __name__ == '__main__':
             epochs=_epochs,
             batch_size=batch_size, #number of samples per gradient update
             shuffle=True,
-            verbose=2, # reports on progress
+            verbose=1, # reports on progress
             #sample_weight=None,
             ## validation_split=0.1,
             validation_data=(X_val, y_val),

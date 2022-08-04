@@ -46,32 +46,16 @@ if __name__ == '__main__':
         np.save(file='data/y_val', arr=y_val)
 
     # import model
-    from taunet.models import keras_model_small_mdn, keras_model_big_mdn, keras_model_big_mdn_regular, keras_model_2gauss_mdn_small, keras_model_MultiGauss_mdn
+    from taunet.models import keras_model_2gauss_mdn_small
     from taunet.computation import tf_mdn_loss, gaussian_nll
-    # choose model 
-    # if args.small_model:
-    #     regressor = keras_model_small_mdn((len(FEATURES),))
-    # elif args.big_model:
-    #     regressor = keras_model_big_mdn((len(FEATURES),))
-    # elif args.big_model_regular:
-    #     regressor = keras_model_big_mdn_regular((len(FEATURES),))
-    # elif args.small_2gauss:
     regressor = keras_model_2gauss_mdn_small((len(FEATURES),))
-    # elif args.multi_gauss:
-    #     regressor = keras_model_MultiGauss_mdn((len(FEATURES),))
-    # else:
-    #     raise NameError('No model provided!')
-    # create location to save training
     _model_file = os.path.join('cache', regressor.name+'.h5')
     try:
         rate = args.rate #default rate 1e-7
         batch_size = args.batch_size #default size 64
         # optimized as a stochastic gradient descent (i.e. Adam)
         adam = tf.keras.optimizers.get('Adam')
-        #? why is this printed twice
-        print (adam.learning_rate)
         adam.learning_rate = rate
-        print (adam.learning_rate)
         _epochs = 300
         regressor.compile(
             loss=tf_mdn_loss, 

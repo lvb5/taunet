@@ -41,4 +41,4 @@ OTHER_TES = [
     'TauJetsAuxDyn.ptFinalCalib',
 ]
 
-TARGET_FIELD = 'TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptCombined'
+TARGET_FIELD = ['TauJetsAuxDyn.truthPtVisDressed/TauJetsAuxDyn.ptCombined', 'TauJetsAuxDyn.truthEtaVisDressed', 'TauJetsAuxDyn.truthPhiVisDressed']

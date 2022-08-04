@@ -101,14 +101,14 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
                 if debug:
                     a = debug_mode(
                         tree,
-                        features + [target], 
+                        features + target, 
                         cut = 'EventInfoAuxDyn.eventNumber%3 != 0',
                         select_1p=select_1p,
                         select_3p=select_3p)
                 else:
                     a = retrieve_arrays(
                         tree,
-                        features + [target], 
+                        features + target, 
                         cut = 'EventInfoAuxDyn.eventNumber%3 != 0',
                         select_1p=select_1p,
                         select_3p=select_3p)
@@ -116,12 +116,14 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
                 a = a[ a['TauJetsAuxDyn.ptIntermediateAxis/TauJetsAuxDyn.ptCombined'] < 25. ] 
                 f = np.stack(
                     [ak.flatten(a[__feat]).to_numpy() for __feat in features])
+                t = np.stack(
+                    [ak.flatten(a[_targ]).to_numpy() for _targ in target])
                 _train  += [f.T]
-                _target += [ak.flatten(a[target]).to_numpy()]
+                _target += [t.T]
 
         _train  = np.concatenate(_train, axis=0)
-        _target = np.concatenate(_target)
-        _target = _target.reshape(_target.shape[0], 1)
+        _target = np.concatenate(_target, axis = 0)
+        #_target = _target.reshape(_target.shape[0], 1)
         log.info('Total training input = {}'.format(_train.shape))
 
         #normalize here!

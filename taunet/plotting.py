@@ -35,42 +35,58 @@ def pt_lineshape(testing_data, plotSaveLoc):
     """
     """
     log.info('Plotting the transverse momenta on the full dataset')
-    fig = plt.figure(figsize=(5,5), dpi = 300)
-    plt.ticklabel_format(axis='y',style='sci',scilimits=(-3,3))
-    counts_t, bins_t, bars_t = plt.hist(
+    fig, (ax1, ax2) = plt.subplots(nrows=2, gridspec_kw={'height_ratios': [3,1]}, figsize=(5,6), dpi=100)
+    ax1.ticklabel_format(axis='y',style='sci',scilimits=(-3,3), useMathText=True)
+    counts_t, bins_t, bars_t = ax1.hist(
         testing_data['TauJetsAuxDyn.truthPtVisDressed'] / 1000.,
         bins=200,
         range=(0, 200), 
         histtype='stepfilled',
         color='cyan')
-        #label='Truth')
-    counts_b, bins_b, bars_b = plt.hist(
+    counts_b, bins_b, bars_b = ax1.hist(
         testing_data['TauJetsAuxDyn.ptCombined'] / 1000.,
         bins=200,
         range=(0, 200), 
         histtype='step',
         color='black')
-        #label='Combined')
-    counts_f, bins_f, bars_f = plt.hist(
+    counts_f, bins_f, bars_f = ax1.hist(
         testing_data['TauJetsAuxDyn.ptFinalCalib'] / 1000.,
         bins=200,
         range=(0, 200), 
         histtype='step',
         color='red')
-        #label='Final, $\\chi^2 = ${}'.format(chi_squared(counts_f, counts_t)))
-    counts_ts, bins_ts, bars_ts = plt.hist(
-        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptTauEnergyScale'] / 1000.,
+    counts_ts, bins_ts, bars_ts = ax1.hist(
+        testing_data['regressed_target'] * testing_data['TauJetsAuxDyn.ptCombined'] / 1000.,
         bins=200,
         range=(0, 200), 
         histtype='step',
         color='purple')
-        #label='This work, $\\chi^2 = ${}'.format(chi_squared(counts_ts, counts_t)))
-    plt.ylabel('Number of $\\tau_{had-vis}$', loc='top')
-    plt.xlabel('$p_{T}(\\tau_{had-vis})$ [GeV]', loc='right')
-    plt.legend(['Truth', 
-                'Combined $\\chi^2 = ${}'.format(round(chi_squared(counts_f, counts_b))), 
-                'Final, $\\chi^2 = ${}'.format(round(chi_squared(counts_f, counts_t))), 
-                'This work, $\\chi^2 = ${}'.format(round(chi_squared(counts_ts, counts_t)))])
+    ax1.set_ylabel('Number of $\\tau_{had-vis}$', loc='top')
+    ax1.legend(['Truth', 
+                'Combined, $\\chi^2 = {}$'.format(round(chi_squared(counts_f, counts_b))), 
+                'Final, $\\chi^2 = {}$'.format(round(chi_squared(counts_f, counts_t))), 
+                'This work, $\\chi^2 = {}$'.format(round(chi_squared(counts_ts, counts_t)))])
+    
+    def cn(vec, bins):
+        newvec = []
+        newbins = []
+        tempsum = 0
+        for i in range(len(bins)):
+            tempsum += vec[i]
+            if i % 10 == 0 and i != 0:
+                newvec.append(tempsum)
+                newbins.append(bins[i])
+                tempsum = 0
+        return (np.array(newvec), np.array(newbins))
+        
+    bins = bins_t[0:len(bins_t)-1]
+    ax2.plot(cn(counts_ts, bins)[1], cn(counts_ts, bins)[0] / cn(counts_t, bins)[0], color='purple', marker='+')
+    ax2.plot(cn(counts_ts, bins)[1], cn(counts_b, bins)[0] / cn(counts_t, bins)[0], color='black', marker='+')
+    ax2.plot(cn(counts_ts, bins)[1], cn(counts_f, bins)[0] / cn(counts_t, bins)[0], color='red', marker='+')
+    ax2.grid()
+    ax2.set_ylabel('Predicted/Truth', loc='top')
+    ax2.set_xlabel('$p_{T}(\\tau_{had-vis})$ [GeV]', loc='right')
+    
     plt.savefig(os.path.join(plotSaveLoc, 'plots/tes_pt_lineshape.pdf'))
     plt.close(fig)
 

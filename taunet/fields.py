@@ -11,7 +11,7 @@ FEATURES = [
     'TauJetsAuxDyn.ClustersMeanPresamplerFrac',
     'TauJetsAuxDyn.ClustersMeanEMProbability',
     'TauJetsAuxDyn.ptIntermediateAxisEM/TauJetsAuxDyn.ptIntermediateAxis', # Terry doesn't use
-    'TauJetsAuxDyn.ptCombined',
+    # 'TauJetsAuxDyn.ptCombined',
     'TauJetsAuxDyn.ptPanTauCellBased/TauJetsAuxDyn.ptCombined',
     'TauJetsAuxDyn.ptIntermediateAxis/TauJetsAuxDyn.ptCombined',
     'TauJetsAuxDyn.etaPanTauCellBased',

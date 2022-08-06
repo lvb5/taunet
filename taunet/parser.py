@@ -21,6 +21,7 @@ train_parser.add_argument('--small-model', default=False, action='store_true')
 train_parser.add_argument('--big-model', default=False, action='store_true')
 train_parser.add_argument('--big-model-regular', default=False, action='store_true')
 train_parser.add_argument('--small-2gauss', default=False, action='store_true')
+train_parser.add_argument('--small-2gauss-noreg', default=False, action='store_true')
 train_parser.add_argument('--multi-gauss', default=False, action='store_true')
 
 

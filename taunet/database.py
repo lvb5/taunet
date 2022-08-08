@@ -6,7 +6,7 @@ Database changes:
 import os
 from unittest.mock import DEFAULT
 
-from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalizeTest, getVarIndices, select_norms, VARNORM, applySSNormalize
+from taunet.computation import StandardScalar, applySSNormalizeTest, getSSNormalize, applySSNormalizeTest, getVarIndices, select_norms, VARNORM, applySSNormalize, get_global_params
 from . import log; log = log.getChild(__name__)
 
 if '/Users/miles_cb' in os.getcwd():
@@ -112,6 +112,7 @@ def training_data(path, dataset, features, target, nfiles=-1, select_1p=False, s
                         cut = 'EventInfoAuxDyn.eventNumber%3 != 0',
                         select_1p=select_1p,
                         select_3p=select_3p)
+                a = a[ a['TauJetsAuxDyn.ptIntermediateAxisEM/TauJetsAuxDyn.ptIntermediateAxis'] < 25. ] 
                 a = a[ a['TauJetsAuxDyn.ptPanTauCellBased/TauJetsAuxDyn.ptCombined'] < 25. ] 
                 a = a[ a['TauJetsAuxDyn.ptIntermediateAxis/TauJetsAuxDyn.ptCombined'] < 25. ] 
                 f = np.stack(
@@ -198,6 +199,7 @@ def testing_data(
                     cut = 'EventInfoAuxDyn.eventNumber%3 == 0',
                     select_1p=select_1p,
                     select_3p=select_3p)
+            a = a[ a['TauJetsAuxDyn.ptIntermediateAxisEM/TauJetsAuxDyn.ptIntermediateAxis'] < 25. ] 
             a = a[ a['TauJetsAuxDyn.ptPanTauCellBased/TauJetsAuxDyn.ptCombined'] < 25. ] 
             a = a[ a['TauJetsAuxDyn.ptIntermediateAxis/TauJetsAuxDyn.ptCombined'] < 25. ]
             f = np.stack(
@@ -207,7 +209,7 @@ def testing_data(
             if not no_normalize:
                 f = applySSNormalizeTest(f, norms, vars=getVarIndices(features, varnom))
                 log.info('Normalizing input data to regressor')
-            regressed_target = regressor.predict(f.T)
+            regressed_target = get_global_params(regressor, f.T, mode=1)
             if not no_norm_target:
                 # If target was normalized, revert to original
                 # Last element of variable "norms" contains mean (element 0) 

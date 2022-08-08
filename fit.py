@@ -46,15 +46,9 @@ if __name__ == '__main__':
         np.save(file='data/y_val', arr=y_val)
 
     # import model
-    from taunet.models import keras_model_2gauss_mdn_small, keras_model_1gauss_mdn_small, keras_model_2gauss_mdn_small_noreg
-    from taunet.computation import tf_mdn_loss, gaussian_nll
-    # choose model 
-    if args.small_1gauss:
-        regressor = keras_model_1gauss_mdn_small((len(FEATURES),))
-    elif args.small_2gauss_noreg:
-        regressor = keras_model_2gauss_mdn_small_noreg((len(FEATURES),))
-    else:
-        regressor = keras_model_2gauss_mdn_small((len(FEATURES),))
+    from taunet.models import keras_model_2gauss_mdn_small_noreg
+    from taunet.computation import tf_mdn_loss
+    regressor = keras_model_2gauss_mdn_small_noreg((len(FEATURES),))
     # create location to save training
     _model_file = os.path.join('cache', regressor.name+'.h5')
     try:

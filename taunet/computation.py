@@ -166,3 +166,43 @@ def find_num_entries(path, dataset, nfiles=-1):
             numEvents += [f]
     np.save(file='data/numEvents', arr=np.stack(ak.flatten(numEvents).to_numpy()))
     return numEntries
+
+    # Get global mean and stddev from mode
+def get_global_params(regressor, arr, mode=0):
+    """
+    Extract global mean and stddev parameters from keras model 
+
+    Parameters:
+    ----------
+    regressor : tf.keras.model
+        model returned from keras
+    arr : np.array
+        array of events to be passed
+    mode : int
+        if 0 returns mean and stddev,
+        if 1 returns only mean,
+        if 2 returns only stddev.
+    """
+
+    dist = regressor(arr)
+    logits = dist.tensor_distribution.mixture_distribution.logits.numpy()
+    probs = tf.nn.softmax(logits[0:,]).numpy() # convert logits to probabilities
+    means = dist.tensor_distribution.components_distribution.tensor_distribution.mean().numpy()
+    globalmean = np.array(
+        [probs[i][0]*means[i][0] + probs[i][1]*means[i][1] 
+                    for i in range(len(means))]).flatten()
+    if mode==0 or mode==2:
+        stddevs = dist.tensor_distribution.components_distribution.tensor_distribution.stddev().numpy()
+        globalstd = np.sqrt(np.array(
+            [probs[i][0]*(stddevs[i][0]**2 + means[i][0]**2)
+            + probs[i][1]*(stddevs[i][1]**2 + means[i][1]**2) 
+            - globalmean[i]**2 for i in range(len(means))]).flatten())
+
+    if mode==0:
+        return globalmean, globalstd
+    elif mode==1:
+        return globalmean
+    elif mode==2:
+        return globalstd
+    else:
+        raise ValueError("Mode specified is out of range")

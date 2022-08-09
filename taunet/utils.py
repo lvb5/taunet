@@ -14,7 +14,14 @@ def get_quantile_width(arr, cl=0.68):
     return width
 
 
-def response_curve(res, var, bins):
+def makeBins(bmin, bmax, nbins):
+    returnBins = []
+    stepsize = (bmax - bmin) / nbins
+    for i in range(nbins):
+        returnBins.append((bmin + i*stepsize, bmin + (i+1)*stepsize))
+    return returnBins
+
+def response_curve(res, var, bins, cl=0.68):
     """
     """
     _bin_centers = []

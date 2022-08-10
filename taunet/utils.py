@@ -4,6 +4,13 @@ import subprocess
 
 from . import log; log = log.getChild(__name__)
 
+def makeBins(bmin, bmax, nbins):
+    returnBins = []
+    stepsize = (bmax - bmin) / nbins
+    for i in range(nbins):
+        returnBins.append((bmin + i*stepsize, bmin + (i+1)*stepsize))
+    return returnBins
+
 def get_quantile_width(arr, cl=0.68):
     """
     """
@@ -13,8 +20,7 @@ def get_quantile_width(arr, cl=0.68):
     width = (y[1] - y[0]) / 2.
     return width
 
-
-def response_curve(res, var, bins):
+def response_curve(res, var, bins, cl=0.68):
     """
     """
     _bin_centers = []
@@ -22,29 +28,17 @@ def response_curve(res, var, bins):
     _means = []
     _mean_stat_err = []
     _resol = []
-    _numRemoved = []
-    _fracRemoved = []
     for _bin in bins:
         a = res[(var > _bin[0]) & (var < _bin[1])]
-        # mean = 
-        # mean, std = norm.fit(a)
-        # y = np.quantile(a, [q1, q2])
-        # res_68 = (y[1] - y[0]) / 2.
-        # print (_bin, len(a), a.mean(), mean, a.std(), std, (y[1] - y[0]) / 2., np.quantile(a-1, 0.95))
-        # make some cuts here to take care of outlierss
-        # a = a[a < 1e3]
-        # a = a[a > 1e-3]
-        # numAbove = sum(a[a > 1e3])
-        # numBelow = sum(a[a < 1e-3])
-        # _numRemoved += [numAbove + numBelow]
-        # _fracRemoved += [(numAbove + numBelow) / len(a)]
+        if len(a) == 0:
+            log.info('Bin was empty! Moving on to next bin')
+            continue
         _means += [np.mean(a)]
         _mean_stat_err += [np.std(a, ddof=1) / np.sqrt(np.size(a))]
-        _resol += [get_quantile_width(a)]
+        _resol += [get_quantile_width(a, cl=cl)]
         _bin_centers += [_bin[0] + (_bin[1] - _bin[0]) / 2]
         _bin_errors += [(_bin[1] - _bin[0]) / 2]
-    return np.array(_bin_centers), np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), \
-           np.array(_resol), np.array(_numRemoved), np.array(_fracRemoved)
+    return np.array(_bin_centers), np.array(_bin_errors), np.array(_means), np.array(_mean_stat_err), np.array(_resol)
 
 
 def copy_plots_to_cernbox(fmt='pdf', location='taunet_plots'):

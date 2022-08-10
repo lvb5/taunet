@@ -33,7 +33,7 @@ if __name__ == '__main__':
     if args.debug:
         n_files = 3
     else:
-        n_files = -1
+        n_files = args.nfiles
 
     path = args.path # path to where training is stored
     # make plot folder if it doesn't already exist
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         PATH, DATASET, FEATURES, TRUTH_FIELDS + OTHER_TES, regressor, nfiles=n_files, 
         optional_path=path, select_1p=args.oneProng, select_3p=args.threeProngs, 
         no_normalize=args.no_normalize, no_norm_target=args.no_norm_target, normIndices=list(map(int, args.normIDs)), 
-        saveToCache=args.add_to_cache, useCache=args.use_cache)
+        saveToCache=args.add_to_cache, useCache=args.use_cache, debug=args.debug)
 
     from taunet.plotting import nn_history
     nn_history(os.path.join(path, 'history.p'), path)
@@ -64,13 +64,14 @@ if __name__ == '__main__':
 
     from taunet.plotting import response_lineshape
     response_lineshape(d, path)
+    response_lineshape(d, path, plotSaveName='plots/tes_response_lineshape_zoomedin.pdf', Range=(0.9, 1.1), scale='linear', lineat1=True)
 
     from taunet.plotting import target_lineshape
     target_lineshape(d, plotSaveLoc=path)
     target_lineshape(d, bins=100, range=(0.5, 1.5), basename='tes_target_lineshape_zoomedin', logy=False, plotSaveLoc=path)
 
-    from taunet.plotting import response_and_resol_vs_pt
-    response_and_resol_vs_pt(d, path)
+    from taunet.plotting import response_and_resol_vs_var
+    response_and_resol_vs_var(d, path)
 
     if args.copy_to_cernbox:
         from taunet.utils import copy_plots_to_cernbox

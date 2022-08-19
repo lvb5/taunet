@@ -355,7 +355,7 @@ def testing_data(
             _arrs += [_arr]
 
     log.info("Variables normalized: {}".format(
-                list(features[i] for i in getVarIndices(features, VARNORM))))
+                list(features[i] for i in getVarIndices(features, varnom))))
     _arrs = np.concatenate(_arrs)
     log.info('Total testing input = {}'.format(_arrs.shape))
     if saveToCache:
